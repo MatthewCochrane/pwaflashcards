@@ -26,28 +26,36 @@
         return dateA - dateB
       })
 
-      let mAvgLen = 3 // sortedResults.length < 20 ? sortedResults.length / 4 : 10
+      // Want a single graph with 'performance' over time...
+      // correct = more performance
+      // answer more quickly = more performance
 
-      let correct = this.$lodash.times(mAvgLen, this.$lodash.constant(0)).concat(
-        this.movingAvg(this.$lodash.map(sortedResults, result => result.correct ? 1 : 0), mAvgLen))
+      var perfVals = []
+      var lastTimeTaken = -1
+      var lastPerfVal = 0
 
-      // console.log(sortedResults)
+      sortedResults.forEach((r) => {
+        let perfVal = (r.correct ? 1 : -1)
+
+        if (lastTimeTaken > 0) {
+          perfVal *= (lastTimeTaken / r.timeTaken)
+        }
+
+        perfVal = lastPerfVal + perfVal
+        perfVals.push(Math.min(perfVal, 10))
+
+        lastPerfVal = perfVal
+        if (r.correct === true) lastTimeTaken = r.timeTaken
+      })
 
       this.renderChart({
         labels: this.$lodash.range(1, sortedResults.length + 1),
         datasets: [
           {
-            label: 'Time Taken',
-            yAxisID: 'A',
-            borderColor: '#f87979',
-            data: this.$lodash.map(sortedResults, result => result.timeTaken)
-          },
-          {
-            label: 'Correct',
-            yAxisID: 'B',
+            label: 'Performance',
+            yAxisID: 'Perf',
             borderColor: '#7979f8',
-            tension: 0, // disables bezier curves
-            data: correct
+            data: perfVals
           }
         ]
       },
@@ -58,19 +66,9 @@
         scales: {
           yAxes: [
             {
-              id: 'A',
+              id: 'Perf',
               type: 'linear',
               position: 'left',
-              display: false,
-              ticks: {
-                suggestedMin: 0,
-                suggestedMax: 10000
-              }
-            },
-            {
-              id: 'B',
-              type: 'linear',
-              position: 'right',
               display: false
             }
           ],
@@ -79,6 +77,9 @@
               display: false
             }
           ]
+        },
+        tooltips: {
+          enabled: false
         }
       })
     }
