@@ -2,6 +2,8 @@
 
 > A PWA for viewing flashcard decks.
 
+Still a work in progress but you can view a live demo at [pwaflash.mcochrane.com](https://pwaflash.mcochrane.com)
+
 ## Build Setup
 
 ``` bash
