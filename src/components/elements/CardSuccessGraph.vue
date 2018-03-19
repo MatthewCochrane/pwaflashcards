@@ -80,6 +80,9 @@
         },
         tooltips: {
           enabled: false
+        },
+        animation: {
+          duration: 0
         }
       })
     }

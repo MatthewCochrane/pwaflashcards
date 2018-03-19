@@ -130,6 +130,10 @@
 </script>
 
 <style lang="scss" scoped>
+
+  #id {
+    overscroll-behavior-y: contain;
+  }
   .md-drawer {
     width: 230px;
     max-width: calc(100vw - 125px);
