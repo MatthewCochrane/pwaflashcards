@@ -22,9 +22,11 @@ var refs = {
   cardsReady: false,
   resultsReady: false
 }
-
 function updateReadyInStore () {
-  store.commit('setFirestoreReady', refs.decksReady && refs.cardsReady && refs.resultsReady)
+  let curVal = refs.decksReady && refs.cardsReady && refs.resultsReady
+  if (store.state.auth.firestoreReady !== curVal) {
+    store.commit('setFirestoreReady', curVal)
+  }
 }
 
 let cancelDecksWatcher = null

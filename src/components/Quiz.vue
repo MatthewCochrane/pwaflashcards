@@ -25,6 +25,11 @@
     <div>Incorrect Answers: <strong>{{incorrectlyAnswered}}</strong></div>
     <md-button v-if="showingAnswer" @click="$router.go(-1)" class="md-primary md-raised">Go Back</md-button>
   </md-card>
+
+  <div style="position: fixed; bottom: 0; right: 0;">
+    {{unshownCards.length + 1}}
+  </div>
+
 </div>
 </template>
 
@@ -99,7 +104,14 @@
           else this.incorrectlyAnswered++
         }
         if (this.unshownCards.length) {
+          if (!correct && this.currentCardId != null) {
+            // this.unshownCards.unshift(this.currentCardId)
+            this.unshownCards.push(this.currentCardId)
+            this.unshownCards = this.$lodash.shuffle(this.unshownCards)
+          }
           this.currentCardId = this.unshownCards.pop()
+          console.log(this.unshownCards)
+
           this.showingAnswer = false
           this.$nextTick(() => {
             this.cardStartMillis = (new Date()).valueOf()
